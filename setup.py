@@ -5,16 +5,20 @@ setup(
     author_email='monk@10forge.org',
     classifiers=[
         'Topic :: Software Development :: Libraries',
-        'Topic :: System :: Systems Administration'
+        'Topic :: System :: Systems Administration',
+        'Programming Language :: Python :: 3.5',
     ],
     description='Python interface for interacting with proxmox.',
     install_requires=[
-        'paramiko>=1.16.0'
+        'paramiko>=1.16.0',
     ],
     keywords=['api', 'http', 'proxmox', 'pve', 'shell'],
-    license='not ready for distribution',
+    license='GPLv3',
     name='libpve',
+    package_data={
+        '': ['LICENSE.txt', 'README.md'],
+    },
     packages=find_packages('libpve'),
-    url='https://github.com/m-o-n-k/libpve.git',
+    url='https://github.com/m-o-n-k/python.libpve.git',
     version='0.1.0',
     zip_safe=False)

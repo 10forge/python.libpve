@@ -1,4 +1,4 @@
-libpve - Python interface for interacting with proxmox..
+libpve - Python interface for interacting with proxmox.
 Copyright (C) 2016 Thomas Steinert <monk@10forge.org>
 
 This program is free software: you can redistribute it and/or modify
