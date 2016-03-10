@@ -58,3 +58,22 @@ If you want to enable verbose output initialize the shell with verbose=True:
 ```
 pve = libpve.Shell(verbose=True)
 ```
+
+## Profiles
+
+An example profile could look like this:
+
+```
+{
+  "cpulimit": 2,
+  "description": "Example container",
+  "hostname": "pvecontainer01",
+  "memory": 1024,
+  "nameserver": "8.8.8.8",
+  "net0": "name=eth0,hwaddr=52:4A:5E:26:58:D8,ip=192.168.15.147/24,gw=192.168.15.1,bridge=vmbr0",
+  "ostemplate": "local:vztmpl/ubuntu-14.04-standard_14.04-1_amd64.tar.gz",
+  "password": "changeme",
+  "rootfs": 4,
+  "storage": "local",
+}
+```
