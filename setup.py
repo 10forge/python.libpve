@@ -24,5 +24,5 @@ setup(
         ]
     ),
     url='https://github.com/m-o-n-k/python.libpve.git',
-    version='0.1.4',
+    version='0.1.5',
     zip_safe=False)

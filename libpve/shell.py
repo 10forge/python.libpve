@@ -53,11 +53,14 @@ class Shell:
         self.last_id = vmid
         cmd = 'create /nodes/{}/{}'.format(node, technology)
         if(technology == 'lxc'):
-            cmd += ' -ostemplate {}'.format(profile['ostemplate'])
+            cmd += ' -ostemplate "{}"'.format(profile['ostemplate'])
             del profile['ostemplate']
-        cmd += ' -vmid {}'.format(vmid)
+        else:
+            print('{} is not yet supported'.format(technology))
+            self.disconnect(1)
+        cmd += ' -vmid "{}"'.format(vmid)
         for parameter, value in profile.items():
-            cmd += ' -{} {}'.format(parameter, value)
+            cmd += ' -{} "{}"'.format(parameter, value)
         return self.run(cmd)
 
     def create_template(self, technology, vmid, node=None):
@@ -107,7 +110,7 @@ class Shell:
             str: Output of the command.
 
         """
-        if(self.verbose==True):
+        if(self.verbose == True):
             print('SHELL: {}'.format(cmd))
         try:
             stdin, stdout, stderr = self.ssh.exec_command('pvesh {}'.format(cmd))
@@ -116,12 +119,12 @@ class Shell:
             self.disconnect(1)
         else:
             error = stderr.read().decode().strip()
-            if(self.verbose==True and error!=''):
+            if(self.verbose == True and error != ''):
                 if(error!='200 OK'):
                     print('ERROR: {}'.format(error))
                     self.disconnect(1)
             output = stdout.read().decode().strip().strip('"')
-            if(self.verbose==True and output!=''):
+            if(self.verbose == True and output != ''):
                 print('RETURN: {}'.format(output))
             return output
 
