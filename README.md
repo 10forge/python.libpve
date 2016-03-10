@@ -9,8 +9,8 @@ import libpve
 
 pve = libpve.Shell()
 pve.connect('proxmox')
-print(pve.create('lxc', {"ostemplate": "local:vztmpl/ubuntu-14.04-standard_14.04-1_amd64.tar.gz"}))
-print(pve.start('lxc', pve.last_id))
+pve.create('lxc', {"ostemplate": "local:vztmpl/ubuntu-14.04-standard_14.04-1_amd64.tar.gz"})
+pve.start('lxc', pve.last_id)
 ```
 
 ## Reference
@@ -53,11 +53,13 @@ def create(self, technology, profile={}, vmid=None, node=None):
 
 ## Verbosity
 
-If you want to enable verbose output initialize the shell with verbose=True:
+If you want to enable verbose output initialize the shell like this:
 
 ```
 pve = libpve.Shell(verbose=True)
 ```
+
+Verbose output will display the executed command, the return value of the executed command and errors if they are thrown.
 
 ## Profiles
 
