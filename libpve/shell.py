@@ -51,14 +51,27 @@ class Shell:
             vmid = self.next_id
 
         self.last_id = vmid
+
+        # Magic cmd creation
         cmd = 'create /nodes/{}/{}'.format(node, technology)
+
+        # ostemplate
         if(technology == 'lxc'):
-            cmd += ' -ostemplate "{}"'.format(profile['ostemplate'])
+            cmd += ' -ostemplate {}'.format(profile['ostemplate'])
             del profile['ostemplate']
         else:
             print('{} is not yet supported'.format(technology))
             self.disconnect(1)
+
+        # vmid
         cmd += ' -vmid {}'.format(vmid)
+
+        # description, if available - need to be in exclamation mark for whitespace
+        if('description' in profile.keys()):
+            cmd += ' -description \'{}\''.format(profile['description'])
+            del profile['description']
+
+        # rest of the profile
         for parameter, value in profile.items():
             cmd += ' -{} {}'.format(parameter, value)
         return self.run(cmd)
