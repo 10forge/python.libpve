@@ -58,9 +58,9 @@ class Shell:
         else:
             print('{} is not yet supported'.format(technology))
             self.disconnect(1)
-        cmd += ' -vmid "{}"'.format(vmid)
+        cmd += ' -vmid {}'.format(vmid)
         for parameter, value in profile.items():
-            cmd += ' -{} "{}"'.format(parameter, value)
+            cmd += ' -{} {}'.format(parameter, value)
         return self.run(cmd)
 
     def create_template(self, technology, vmid, node=None):
