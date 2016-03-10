@@ -18,7 +18,11 @@ setup(
     package_data={
         '': ['LICENSE.txt', 'README.md'],
     },
-    packages=find_packages('libpve'),
+    packages=find_packages(
+         exclude=[
+            'tests'
+        ]
+    ),
     url='https://github.com/m-o-n-k/python.libpve.git',
-    version='0.1.0',
+    version='0.1.2',
     zip_safe=False)
