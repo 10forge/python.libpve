@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 import paramiko
 import sys
 
@@ -10,11 +9,13 @@ class Shell:
     last_id = None
     next_id = None
     ssh = None
+    verbose = None
 
     def __init__(self, verbose=False):
 
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.verbose = verbose
 
     @property
     def next_id(self):
@@ -24,7 +25,7 @@ class Shell:
             int: vmid
 
         """
-        return int(self.run('get /cluster/nextid').strip().strip('"'))
+        return int(self.run('get /cluster/nextid'))
 
     def add_to_pool(self, pool_id, pve_vmid_list):
         """Adds virtual machines to a pool.
@@ -44,8 +45,6 @@ class Shell:
             str: Output of the command.
 
         """
-        if(technology == 'lxc'):
-            ostemplate = profile['ostemplate']
         if(node == None):
             node = self.hostname
         if(vmid == None):
@@ -53,8 +52,9 @@ class Shell:
 
         self.last_id = vmid
         cmd = 'create /nodes/{}/{}'.format(node, technology)
-        cmd += ' -ostemplate {}'.format(ostemplate)
         cmd += ' -vmid {}'.format(vmid)
+        for parameter, value in profile.items():
+            cmd += ' -{} {}'.format(parameter, value)
         return self.run(cmd)
 
     def create_template(self, technology, vmid, node=None):
@@ -97,24 +97,30 @@ class Shell:
         cmd = 'delete /nodes/{}/{}/{}'.format(node, technology, vmid)
         return self.run(cmd)
 
-    def run(self, cmd, silent=False):
+    def run(self, cmd):
         """Runs a command on the node.
 
         Returns:
             str: Output of the command.
 
         """
-        if(silent!=True):
+        if(self.verbose==True):
             print('SHELL: {}'.format(cmd))
         try:
             stdin, stdout, stderr = self.ssh.exec_command('pvesh {}'.format(cmd))
-            if self.stderr.read() != b'' and silent != True:
-                print(self.stderr.read().decode(), file=sys.stderr)
         except Exception as E:
-            self.ssh.disconnect()
             print(E)
-        finally:
-            return stdout.read().decode()
+            self.disconnect(1)
+        else:
+            error = stderr.read().decode().strip()
+            if(self.verbose==True and error!=''):
+                if(error!='200 OK'):
+                    print('ERROR: {}'.format(error))
+                    self.disconnect(1)
+            output = stdout.read().decode().strip().strip('"')
+            if(self.verbose==True and output!=''):
+                print('RETURN: {}'.format(output))
+            return output
 
     def connect(self, fqdn, port=22, username='root', password=None):
         """Connects to a node.
@@ -126,11 +132,12 @@ class Shell:
         self.ssh.connect(fqdn, port, username, password, allow_agent=False)
         self.hostname = fqdn.split('.')[0]
 
-    def disconnect(self):
+    def disconnect(self, return_status=0):
         """Disconnects from a node.
 
         """
         self.ssh.close()
+        sys.exit(return_status)
 
     def start(self, technology, vmid, node=None):
         """Starts a container.

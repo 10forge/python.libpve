@@ -9,7 +9,7 @@ import libpve
 
 pve = libpve.Shell()
 pve.connect('proxmox')
-print(pve.create('lxc', {"ostemplate": "local:vztmpl/ubuntu-14.04-standard_14.04-1_amd64.tar.gz"))
+print(pve.create('lxc', {"ostemplate": "local:vztmpl/ubuntu-14.04-standard_14.04-1_amd64.tar.gz"}))
 print(pve.start('lxc', pve.last_id))
 ```
 
@@ -21,6 +21,7 @@ print(pve.start('lxc', pve.last_id))
 * **last_id** Vmid used in the last run. Not every method sets libpve.last_id. See the methods section for more infos.
 * **next_id** Next free vmid of the cluster.
 * **ssh** Paramiko ssh client.
+* **verbose** Verbose output switch.
 
 ### Methods
 
@@ -44,7 +45,16 @@ def create(self, technology, profile={}, vmid=None, node=None):
         ...
         self.last_id = vmid
         cmd = 'create /nodes/{}/{}'.format(node, technology)
-        cmd += ' -ostemplate {}'.format(ostemplate)
         cmd += ' -vmid {}'.format(vmid)
+        for parameter, value in profile.items():
+            cmd += ' -{} {}'.format(parameter, value)
         return self.run(cmd)
+```
+
+## Verbosity
+
+If you want to enable verbose output initialize the shell with verbose=True:
+
+```
+pve = libpve.Shell(verbose=True)
 ```
