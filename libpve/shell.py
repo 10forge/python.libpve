@@ -52,6 +52,9 @@ class Shell:
 
         self.last_id = vmid
         cmd = 'create /nodes/{}/{}'.format(node, technology)
+        if(technology == 'lxc'):
+            cmd += ' -ostemplate {}'.format(profile['ostemplate'])
+            del profile['ostemplate']
         cmd += ' -vmid {}'.format(vmid)
         for parameter, value in profile.items():
             cmd += ' -{} {}'.format(parameter, value)
