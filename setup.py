@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     author='Thomas Steinert',
-    author_email='monk@10forge.org',
+    author_email='contact@10forge.org',
     classifiers=[
         'Topic :: Software Development :: Libraries',
         'Topic :: System :: Systems Administration',
@@ -23,6 +23,6 @@ setup(
             'tests'
         ]
     ),
-    url='https://github.com/m-o-n-k/python.libpve.git',
-    version='0.2.0',
+    url='https://github.com/10forge/python.libpve.git',
+    version='0.2.1',
     zip_safe=False)
